@@ -1,0 +1,3 @@
+interface CategoryAPIResponse {
+  categories: ICategoryDTO[];
+}
