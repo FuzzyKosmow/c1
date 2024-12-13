@@ -11,19 +11,30 @@ import {
   updateUserAdmin,
   deleteUserAdmin,
 } from "@/services/api/admin/user-op";
+import Pagination from "@/components/Pagination";
 export default function UserManagement() {
   const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
   const [users, setUsers] = useState([] as UserInfo[]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserInfo | null>(null);
-
+  // Pagination
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [totalPage, setTotalPage] = useState(0);
   useEffect(() => {
     fetchUsers();
   }, []);
-
+  useEffect(() => {
+    fetchUsers();
+  }, [page, limit]);
+  const handleLimitChange = (newLimit: number) => {
+    setLimit(newLimit);
+    setPage(1);
+  };
   const fetchUsers = async () => {
-    const data = await getUsersAdmin();
-    setUsers(data);
+    const data = await getUsersAdmin({ page, limit });
+    setTotalPage(Math.ceil(data.total / limit));
+    setUsers(data.users);
   };
 
   const openModal = (user: UserInfo | null) => {
@@ -59,7 +70,7 @@ export default function UserManagement() {
     <div>
       <h1 className="text-2xl font-bold">Users</h1>
       <button
-        className="bg-blue-500 text-white px-4 py-2 rounded mb-4 float-right mr-4"
+        className="bg-black-500 text-white px-4 py-2 rounded mb-4 float-right mr-4"
         onClick={() => {
           const csv = users.map((user) => {
             return `${user.id},${user.fullName},${user.email},${user.role},${user.totalOrders},${user.totalValue}`;
@@ -77,7 +88,7 @@ export default function UserManagement() {
       </button>
 
       <button
-        className="bg-blue-500 text-white px-4 py-2 rounded float-right mr-3"
+        className="bg-black-500 text-white px-4 py-2 rounded float-right mr-3"
         onClick={() => {
           window.print();
         }}
@@ -133,6 +144,15 @@ export default function UserManagement() {
           ))}
         </tbody>
       </table>
+      <div className="mt-4">
+        <Pagination
+          currentPage={page}
+          totalPages={totalPage}
+          onPageChange={(page) => setPage(page)}
+          onItemsPerPageChange={handleLimitChange}
+          itemsPerPage={limit}
+        />
+      </div>
       {deleteUserId && (
         <DeleteWarningModal
           onClose={handleCancelDelete}

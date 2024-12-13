@@ -6,13 +6,26 @@ import {
   deleteProduct,
   getAdminProducts,
 } from "@/services/api/admin/product-op";
+import Image from "next/image";
 
+import EDIT_ICON from "@/assets/icons/edit-02.svg";
+import DELETE_ICON from "@/assets/icons/trash-01.svg";
+import Pagination from "@/components/Pagination";
 export default function Products() {
   const [products, setProducts] = useState<IAdminProduct[]>([]);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [totalPage, setTotalPage] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState<IAdminProduct | null>(
     null
   );
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleLimitChange = (newLimit: number) => {
+    setLimit(newLimit);
+    setPage(1);
+  };
 
   // Fetch products on component mount
   useEffect(() => {
@@ -21,12 +34,19 @@ export default function Products() {
 
   const fetchProducts = async () => {
     try {
-      const response = await getAdminProducts();
-      setProducts(response as IAdminProduct[]);
+      const response = await getAdminProducts({
+        page,
+        limit,
+      });
+      setTotalPage(Math.ceil(response.total / limit));
+      setProducts(response.products as IAdminProduct[]);
     } catch (error) {
       console.error("Failed to fetch products", error);
     }
   };
+  useEffect(() => {
+    fetchProducts();
+  }, [page, limit]);
 
   const handleDeleteProduct = async (id: number) => {
     try {
@@ -61,9 +81,9 @@ export default function Products() {
       <h1 className="text-2xl font-bold">Products</h1>
       <button
         onClick={() => openModal(null)}
-        className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+        className="bg-black-500 text-white px-4 py-2 rounded mb-4"
       >
-        Create New Product
+        New +
       </button>
 
       <table className="min-w-full bg-white border border-gray-200">
@@ -95,22 +115,35 @@ export default function Products() {
               <td className="border px-4 py-2">
                 <button
                   onClick={() => openModal(product)}
-                  className="bg-yellow-500 text-white px-2 py-1 rounded mr-2"
+                  className=" px-2 py-1 rounded mr-2"
                 >
-                  Edit
+                  <Image src={EDIT_ICON} alt="Edit" width={16} height={16} />
                 </button>
                 <button
                   onClick={() => handleDeleteProduct(product.id)}
-                  className="bg-red-500 text-white px-2 py-1 rounded"
+                  className=" px-2 py-1 rounded"
                 >
-                  Delete
+                  <Image
+                    src={DELETE_ICON}
+                    alt="Delete"
+                    width={16}
+                    height={16}
+                  />
                 </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
+      <div className="mt-4">
+        <Pagination
+          currentPage={page}
+          totalPages={totalPage}
+          onPageChange={setPage}
+          onItemsPerPageChange={handleLimitChange}
+          itemsPerPage={limit}
+        />
+      </div>
       {isModalOpen && (
         <ProductFormModal product={selectedProduct} closeModal={closeModal} />
       )}
