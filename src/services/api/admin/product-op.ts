@@ -3,8 +3,24 @@ import { currentEnv } from "@/config/environment";
 import axios from "axios";
 import useAuthStore from "@/stores/auth.store";
 
-export async function getAdminProducts(): Promise<IAdminProduct[]> {
-  if (currentEnv === "mock") return getAdminProductsMock();
+interface GetProductAdminParams {
+  limit?: number;
+  page?: number;
+  keyword?: string;
+  category?: string;
+  sort?: string;
+}
+
+export async function getAdminProducts({
+  limit = 10,
+  page = 1,
+  keyword = "",
+  category = "",
+  sort = "",
+}: GetProductAdminParams = {}): Promise<{
+  total: number;
+  products: IAdminProduct[];
+}> {
   const token = useAuthStore.getState().token;
   const response = await axios.get(`${API_URLS.product.getAdminProducts}`, {
     headers:
@@ -13,10 +29,17 @@ export async function getAdminProducts(): Promise<IAdminProduct[]> {
             Authorization: `Bearer ${token}`,
           }
         : {},
+    params: {
+      limit,
+      page,
+      keyword,
+      category,
+      sort,
+    },
   });
-  return response.data;
+  const total = response.headers["x-total-count"];
+  return { total, products: response.data };
 }
-
 export async function addProduct(product: UpsertProductDTO): Promise<void> {
   if (currentEnv === "mock") return;
   const token = useAuthStore.getState().token;
@@ -38,7 +61,6 @@ export async function updateProduct(
   id: string,
   product: UpsertProductDTO
 ): Promise<void> {
-  if (currentEnv === "mock") return;
   const token = useAuthStore.getState().token;
 
   const res = await axios.put(`${API_URLS.admin.updateProduct}${id}`, product, {
@@ -55,7 +77,6 @@ export async function updateProduct(
 }
 
 export async function deleteProduct(id: string): Promise<void> {
-  if (currentEnv === "mock") return;
   const token = useAuthStore.getState().token;
   const res = await axios.delete(`${API_URLS.admin.deleteProduct}${id}`, {
     headers: {
@@ -66,41 +87,4 @@ export async function deleteProduct(id: string): Promise<void> {
     throw new Error("Failed to delete product");
 
   return res.data;
-}
-
-function getAdminProductsMock(): IAdminProduct[] {
-  return Array(Math.floor(Math.random() * 10 + 5))
-    .fill("")
-    .map((_, index) => ({
-      id: index,
-      name: `Product ${index + 1}`,
-      discountPrice: Math.floor(Math.random() * 100000) * 1000,
-      images: Array(Math.floor(Math.random() * 5 + 1)),
-      price: Math.floor(Math.random() * 100000) * 1000,
-      discount_price: Math.floor(Math.random() * 100000) * 1000,
-      rating: Math.random() * 2 + 3,
-      availability: true,
-      storageOptions: ["<string>", "<string>"],
-      colors: ["<string>", "<string>"],
-      categories: [
-        {
-          id: 1,
-          name: "Phone",
-        },
-      ],
-      stock: Math.floor(Math.random() * 100),
-      importPrice: Math.floor(Math.random() * 100000) * 1000,
-
-      storageModifiers: Array(Math.floor(Math.random() * 10 + 5))
-        .fill("")
-        .map((_, index) => index),
-      description: "string",
-      specifications: {
-        key: "value",
-      },
-      isBestSeller: Math.random() > 0.5,
-      isFeatured: Math.random() > 0.5,
-      isNewArrival: Math.random() > 0.5,
-      releaseDate: "2021-01-01",
-    }));
 }

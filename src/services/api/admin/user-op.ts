@@ -1,5 +1,6 @@
 import { API_URLS } from "@/config/api-urls";
 import useAuthStore from "@/stores/auth.store";
+import axios from "axios";
 
 interface UpdateUserParams {
   fullName?: string;
@@ -8,8 +9,14 @@ interface UpdateUserParams {
   district?: string;
   phoneNumber?: string;
 }
-
-export const getUsersAdmin = async () => {
+interface GetUserAdminParams {
+  page?: number;
+  limit?: number;
+}
+export const getUsersAdmin = async ({
+  page = 1,
+  limit = 10,
+}: GetUserAdminParams = {}) => {
   const token = useAuthStore.getState().token;
 
   if (!token) {
@@ -18,17 +25,18 @@ export const getUsersAdmin = async () => {
     );
   }
 
-  const res = await fetch(API_URLS.admin.getUsers, {
-    method: "GET",
+  const res = await axios.get(API_URLS.admin.getUsers, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    params: {
+      page,
+      limit,
+    },
   });
 
-  if (!res.ok) throw new Error("Failed to get users");
-  return await res.json();
+  return { total: res.headers["x-total-count"], users: res.data };
 };
-
 export const deleteUserAdmin = async (id: string) => {
   const token = useAuthStore.getState().token;
 

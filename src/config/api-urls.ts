@@ -46,6 +46,13 @@ export const API_URLS = {
     getUsers: `${API_BASE_URL}/user/search`, // GET
     deleteUser: `${API_BASE_URL}/user/`, // DELETE + id
     updateUser: `${API_BASE_URL}/user/`, // PUT + id
+
+    // Voucher ops
+    getVouchersFromAdmin: `${API_BASE_URL}/voucher/`, // GET
+    addVoucher: `${API_BASE_URL}/voucher`, // POST
+    activateVoucher: `${API_BASE_URL}/voucher/{voucherCode}/activate`, // PUT
+    deactivateVoucher: `${API_BASE_URL}/voucher/{voucherCode}/deactivate`, // PUT
+    deleteVoucher: `${API_BASE_URL}/voucher/`, // DELETE + code
   },
   cart: {
     createOrder: `${API_BASE_URL}/order`, //  POST

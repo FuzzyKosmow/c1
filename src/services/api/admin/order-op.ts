@@ -24,7 +24,8 @@ export const getOrdersAdmin = async ({
       "Token is missing. Please ensure the user is authenticated."
     );
   }
-
+  let total = 0;
+  let orders = [];
   const res = await fetch(
     API_URLS.admin.getOrders +
       `?status=${status}&userId=${
@@ -39,7 +40,15 @@ export const getOrdersAdmin = async ({
   );
 
   if (!res.ok) throw new Error("Failed to get orders");
-  return await res.json();
+  const totalCountHeader = res.headers.get("X-Total-Count");
+  if (totalCountHeader) {
+    total = parseInt(totalCountHeader, 10);
+  }
+
+  // Parse the response body as JSON
+  orders = await res.json();
+
+  return { total, orders };
 };
 
 export const processOrder = async (orderId: number) => {
