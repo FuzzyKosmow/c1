@@ -1,15 +1,11 @@
 declare type ProductDetailAPIResponse = {
   id: number;
   name: string;
-  image: string;
-  gallery: string[];
+  images: string;
   price: number;
   discount_price: number;
   rating: number;
   availability: boolean;
-  storage: string[];
-  storageModifiers: number[];
-  colors: string[];
   release_date?: string | number;
   categories?: {
     id: number;
@@ -18,6 +14,7 @@ declare type ProductDetailAPIResponse = {
   is_bestseller?: boolean;
   is_featured?: boolean;
   is_new_arrival?: boolean;
+  is_popular?: boolean;
   description: string;
   specifications: {
     key: string;

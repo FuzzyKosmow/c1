@@ -8,20 +8,25 @@ export async function signInAPI(
     email: input.username,
     password: input.password,
   });
-  const token = response.data;
-  if (token) {
-    useAuthStore.getState().setToken(token);
-  } else throw new Error("Invalid credentials");
-  const roleResponse = await axios.get(`${API_URLS.auth.me}`, {
-    headers:
-      token && token.length > 0
-        ? {
-            Authorization: `Bearer ${token}`,
-          }
-        : {},
-  });
-  const role = roleResponse.data.role;
-  useAuthStore.getState().setRole(role);
+  try {
+    const token = response.data;
+    if (token) {
+      useAuthStore.getState().setToken(token);
+    } else throw new Error("Invalid credentials");
+    const roleResponse = await axios.get(`${API_URLS.auth.me}`, {
+      headers:
+        token && token.length > 0
+          ? {
+              Authorization: `Bearer ${token}`,
+            }
+          : {},
+    });
+    const role = roleResponse.data.role;
+    useAuthStore.getState().setRole(role);
 
-  return { token, role };
+    return { token, role };
+  } catch (e) {
+    console.error(e);
+    throw new Error("Invalid credentials");
+  }
 }

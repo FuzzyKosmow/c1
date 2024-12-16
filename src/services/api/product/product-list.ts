@@ -7,8 +7,8 @@ const DEFAULT_PRODUCT_LIST_API_OPTIONS: ProductListAPIOptions = {
   keyword: undefined,
   price_min: 0,
   price_max: undefined,
-  color: undefined,
-  storage: undefined,
+  country: undefined,
+  relatedCity: undefined,
   sort: undefined,
   page: undefined,
   limit: 20,
@@ -18,15 +18,34 @@ export async function getProductListAPI(
   options: ProductListAPIOptions = DEFAULT_PRODUCT_LIST_API_OPTIONS
 ): Promise<ProductListAPIResponse> {
   if (currentEnv === "mock") return getProductListAPIMock();
+  console.log("Country:", options.country);
+  console.log("Related city:", options.relatedCity);
+  // Filter out keys with undefined or null values
+  const filteredOptions = Object.fromEntries(
+    Object.entries(options).filter(
+      ([key, value]) => value !== undefined && value !== null
+    )
+  );
 
-  const response = await axios.get(`${API_URLS.product.getProductList}`, {
-    params: options,
-  });
+  console.log("Filtered request parameters:", filteredOptions);
+  console.log(
+    "Full path:",
+    `${API_URLS.product.getProductList}` +
+      "?" +
+      new URLSearchParams(filteredOptions).toString()
+  );
+  try {
+    const response = await axios.get(`${API_URLS.product.getProductList}`, {
+      params: filteredOptions, // Only send valid parameters
+    });
 
-  return response.data;
+    return response.data; // Return the data from the response
+  } catch (error) {
+    console.error("Error fetching product list:", error);
+    throw error; // Re-throw the error for the caller to handle
+  }
 }
-
-export async function getBestDealsAPI(): Promise<ProductListAPIResponse> {
+export async function getBestDealsAPI() {
   if (currentEnv === "mock") return getProductListAPIMock();
 
   const response = await axios.get(`${API_URLS.product.getTodayBestDeal}`);
@@ -42,7 +61,7 @@ export async function getBestSellerAPI(): Promise<ProductListAPIResponse> {
   return { products: response.data };
 }
 
-export async function getNewArrivalsAPI(): Promise<ProductListAPIResponse> {
+export async function getNewArrivalsAPI() {
   if (currentEnv === "mock") return getProductListAPIMock();
 
   const response = await axios.get(`${API_URLS.product.getNewArrivals}`);
@@ -53,9 +72,14 @@ export async function getNewArrivalsAPI(): Promise<ProductListAPIResponse> {
 export async function getCategoriesAPI(): Promise<CategoryAPIResponse> {
   if (currentEnv === "mock") return getCategoriesAPIMock();
 
-  const response = await axios.get(`${API_URLS.product.getCategories}`);
+  try {
+    const response = await axios.get(`${API_URLS.product.getCategories}`);
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    throw error;
+  }
 }
 function getCategoriesAPIMock(): CategoryAPIResponse {
   return {
