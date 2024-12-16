@@ -5,15 +5,17 @@ import Slider from "react-slick";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import ProductCard from "@/components/ProductCard"; // Adjust to your ProductCard component
-import { getBestDealsAPI } from "@/services/api/product/product-list";
-export default function BestDealSection() {
-  const [bestDeals, setBestDeals] = useState([] as IProduct[]);
+import getFeatured from "@/services/api/product/get-featured";
+import ProductCard from "@/components/ProductCard"; // Adjust the import path based on your folder structure.
+
+export default function FeaturedProductSection() {
+  const [products, setProducts] = useState([] as IProduct[]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await getBestDealsAPI();
-      setBestDeals(res.products);
+      const res = await getFeatured();
+      console.log("res", res); // Check the response in the console
+      setProducts(res);
     };
     fetchData();
   }, []);
@@ -21,7 +23,7 @@ export default function BestDealSection() {
   const NextArrow = ({ onClick }) => (
     <div
       onClick={onClick}
-      className="absolute top-1/2 right-4 z-10 cursor-pointer text-3xl text-gray-500 hover:text-gray-700 transform -translate-y-1/2"
+      className="absolute top-1/2 right-4 z-10 cursor-pointer text-2xl text-gray-700 transform -translate-y-1/2"
     >
       <BiChevronRight />
     </div>
@@ -30,14 +32,14 @@ export default function BestDealSection() {
   const PrevArrow = ({ onClick }) => (
     <div
       onClick={onClick}
-      className="absolute top-1/2 left-4 z-10 cursor-pointer text-3xl text-gray-500 hover:text-gray-700 transform -translate-y-1/2"
+      className="absolute top-1/2 left-4 z-10 cursor-pointer text-2xl text-gray-700 transform -translate-y-1/2"
     >
       <BiChevronLeft />
     </div>
   );
 
   const settings = {
-    dots: false,
+    dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 4,
@@ -67,22 +69,23 @@ export default function BestDealSection() {
   };
 
   const priceFormat = (price: number) => {
-    return new Intl.NumberFormat("en-US", {
+    // VND
+    return new Intl.NumberFormat("vi-VN", {
       style: "currency",
-      currency: "USD",
+      currency: "VND",
     }).format(price);
   };
 
   return (
-    <div className="py-8 bg-gradient-to-r from-orange-100 to-yellow-100">
+    <div className="p-8 bg-gray-100">
       <h2 className="text-3xl font-bold text-center mb-6">
-        <span className="inline-block border-b-4 border-green-500 px-4">
-          Best Deals
+        <span className="inline-block border-b-4 border-blue-500 px-4">
+          Featured
         </span>
       </h2>
       <div className="relative">
         <Slider {...settings}>
-          {bestDeals.map((product) => (
+          {products.map((product) => (
             <ProductCard
               key={product.id}
               product={product}

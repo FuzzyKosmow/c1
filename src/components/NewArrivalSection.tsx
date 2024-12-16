@@ -5,15 +5,15 @@ import Slider from "react-slick";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import ProductCard from "@/components/ProductCard"; // Adjust to your ProductCard component
-import { getBestDealsAPI } from "@/services/api/product/product-list";
-export default function BestDealSection() {
-  const [bestDeals, setBestDeals] = useState([] as IProduct[]);
+import ProductCard from "@/components/ProductCard"; // Adjust the path to your ProductCard component
+import { getNewArrivalsAPI } from "@/services/api/product/product-list";
+export default function NewArrivalsSection() {
+  const [newArrivals, setNewArrivals] = useState([] as IProduct[]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await getBestDealsAPI();
-      setBestDeals(res.products);
+      const res = await getNewArrivalsAPI();
+      setNewArrivals(res.products);
     };
     fetchData();
   }, []);
@@ -74,15 +74,15 @@ export default function BestDealSection() {
   };
 
   return (
-    <div className="py-8 bg-gradient-to-r from-orange-100 to-yellow-100">
+    <div className="p-8 bg-white">
       <h2 className="text-3xl font-bold text-center mb-6">
-        <span className="inline-block border-b-4 border-green-500 px-4">
-          Best Deals
+        <span className="inline-block border-b-4 border-orange-500 px-4">
+          New Arrivals
         </span>
       </h2>
       <div className="relative">
         <Slider {...settings}>
-          {bestDeals.map((product) => (
+          {newArrivals.map((product) => (
             <ProductCard
               key={product.id}
               product={product}
