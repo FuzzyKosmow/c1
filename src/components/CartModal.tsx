@@ -9,6 +9,7 @@ import CartView from "./Cart/CartProductView";
 import CustomerForm from "./Cart/CustomerForm";
 import useAuthStore from "@/stores/auth.store";
 import placeOrder from "@/services/api/order/placeOrder";
+import { getCurrentUserInfo } from "@/services/api/auth/getCurrentUserInfo";
 import getPromoCodeValue from "@/services/api/order/getPromoValue";
 import canUsePromoCode from "@/services/api/order/canUsePromoCode";
 import SuccessOrderView from "./Cart/SuccessOrderView";
@@ -73,7 +74,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
   const [shipping, setShipping] = useState<number>(0);
   const [tax, setTax] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
-
+  const [yourTrackingID, setYourTrackingID] = useState<string>("");
   const nextStep = () => {
     if (!isStepValid()) return;
     setValidationError("");
@@ -180,7 +181,27 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
       }
       setLoadingProduct(false);
     };
+    // If request success, fill user info
+    const fillUserInfo = async () => {
+      try {
+        const user = await getCurrentUserInfo();
+        setCustomerDetails({
+          name: user.fullName,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+        });
+        setShippingAddress({
+          province: user.province || "",
+          district: user.district || "",
+          address: user.address,
+        });
+      } catch (e) {
+        console.log("Error fetching user info");
+      }
+    };
+
     if (isOpen) fetchCart();
+    if (isOpen) fillUserInfo();
   }, [isOpen, shipping, tax]);
 
   // Handle promo code change to update total and related
@@ -246,7 +267,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
       setValidationError(res.error);
       return;
     }
-
+    setYourTrackingID(res.trackingID);
     setStep(5);
     setShowConfetti(true);
     setTimeout(() => {
@@ -321,7 +342,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                 setPaymentMethod={setPaymentMethod}
               />
             )}
-            {step === 5 && <SuccessOrderView />}
+            {step === 5 && <SuccessOrderView trackingID={yourTrackingID} />}
           </div>
 
           <div className="w-2/5 ml-8 p-4 bg-gray-100 rounded shadow-lg">
