@@ -160,7 +160,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
         ).then((res) => res.json());
 
         // Actual value, with or without promo code
-        const actualPrice = res.discount_price || res.price;
+        const actualPrice = (res.discount_price || res.price) * quantity;
         const subTotal = actualPrice;
         const tax = subTotal * taxRate * (1 - discountPercentage / 100);
         const discountAmountFromCode = subTotal * (discountPercentage / 100);
@@ -202,7 +202,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
 
     if (isOpen) fetchCart();
     if (isOpen) fillUserInfo();
-  }, [isOpen, shipping, tax]);
+  }, [isOpen, shipping, tax, quantity]);
 
   // Handle promo code change to update total and related
   // Will return a X percentage. This apply to subtotal

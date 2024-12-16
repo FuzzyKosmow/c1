@@ -3,6 +3,7 @@ interface Order {
   customerName: string;
   phoneNumber: string;
   total: number;
+  tax: number;
   status: string;
   items: OrderItem[];
   shippingMethod: string;
@@ -17,13 +18,20 @@ interface OrderItem {
 }
 
 const OrderDisplay = ({ order }: { order?: Order }) => {
+  const formatMoney = (amount: number) => {
+    // To vnd
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(amount);
+  };
   return (
     <>
       {order ? (
         <div className="mt-6 w-full max-w-lg bg-white p-6 rounded shadow-lg">
           {/* Header */}
           <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">
-            Order Details
+            Order Detail
           </h2>
 
           {/* Order Details */}
@@ -36,9 +44,18 @@ const OrderDisplay = ({ order }: { order?: Order }) => {
 
             <div className="font-medium text-gray-600">Phone Number:</div>
             <div>{order.phoneNumber}</div>
-
+            <div className="font-medium text-gray-600">Tax:</div>
+            <div>
+              {formatMoney(order.tax)}{" "}
+              <span className="text-gray-500">(10%)</span>
+            </div>
             <div className="font-medium text-gray-600">Total:</div>
-            <div>${order.total.toFixed(2)}</div>
+            <div>
+              {formatMoney(order.total)}{" "}
+              <span className="text-gray-500">
+                ({order.items.length} items)
+              </span>
+            </div>
 
             <div className="font-medium text-gray-600">Status:</div>
             <div>{order.status}</div>

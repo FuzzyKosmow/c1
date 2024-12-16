@@ -2,7 +2,8 @@ import ContactNav from "@/components/ContactNav";
 import { Footer } from "@/components/Footer";
 import HomeSideBar from "@/components/HomeSideBar";
 import NavHeader from "@/components/NavHeader";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function Layout({
   children,
 }: Readonly<{
@@ -20,6 +21,17 @@ export default function Layout({
       </div>
 
       <Footer />
+      <ToastContainer
+        position="bottom-left"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </>
   );
 }

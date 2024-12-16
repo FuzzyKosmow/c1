@@ -7,6 +7,7 @@ interface Order {
   id: string;
   customerName: string;
   phoneNumber: string;
+  tax: number;
   total: number;
   status: string;
   items: OrderItem[];
@@ -47,6 +48,7 @@ const OrderLookup = ({
         shippingMethod: apiOrder.shippingMethod,
         shippingFee: apiOrder.shippingFee,
         address: apiOrder.address,
+        tax: apiOrder.tax,
         items: apiOrder.orderDetails.map((detail: any) => ({
           id: detail.id.toString(),
           name: detail.product.name,

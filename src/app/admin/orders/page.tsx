@@ -177,7 +177,13 @@ export default function Orders() {
     newWindow.document.close();
     newWindow.print();
   };
-
+  const formatMoney = (amount: number) => {
+    // To VND
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(amount);
+  };
   return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">Manage Orders</h1>
@@ -210,9 +216,7 @@ export default function Orders() {
                 </td>
                 <td className="border px-4 py-2">{order.phoneNumber}</td>
                 <td className="border px-4 py-2">{order.trackingID || "NA"}</td>
-                <td className="border px-4 py-2">
-                  ${(order.total / 100).toFixed(2)}
-                </td>
+                <td className="border px-4 py-2">{formatMoney(order.total)}</td>
                 <td className="border px-4 py-2">{order.paymentMethod}</td>
                 <td
                   className={`border px-4 py-2 ${getStatusClass(order.status)}`}

@@ -9,6 +9,12 @@ const OrderItemComponent = ({ order }: { order: OrderAdmin }) => {
     };
     return statusColors[status.toLowerCase()] || "text-red-500";
   };
+  const formatMoney = (amount: number) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(amount);
+  };
 
   return (
     <div className="mt-6 w-full max-w-lg bg-white p-6 rounded shadow-lg">
@@ -25,9 +31,17 @@ const OrderItemComponent = ({ order }: { order: OrderAdmin }) => {
 
         <div className="font-medium text-gray-600">Order Date:</div>
         <div>{order.orderDate}</div>
-
+        <div className="font-medium text-gray-600">Tax:</div>
+        <div>
+          {formatMoney(order.tax)} <span className="text-gray-500">(10%)</span>
+        </div>
         <div className="font-medium text-gray-600">Total:</div>
-        <div>${order.total.toFixed(2)}</div>
+        <div>
+          {formatMoney(order.total)}{" "}
+          <span className="text-gray-500">
+            ({order.orderDetails.length} items)
+          </span>
+        </div>
 
         <div className="font-medium text-gray-600">Payment Method:</div>
         <div>{order.paymentMethod}</div>
@@ -36,7 +50,10 @@ const OrderItemComponent = ({ order }: { order: OrderAdmin }) => {
         <div>{order.shippingMethod}</div>
 
         <div className="font-medium text-gray-600">Shipping Fee:</div>
-        <div>${order.shippingFee.toFixed(2)}</div>
+        <div>
+          {formatMoney(order.shippingFee)}{" "}
+          <span className="text-gray-500">({order.shippingMethod})</span>
+        </div>
 
         <div className="font-medium text-gray-600">Address:</div>
         <div>{order.address}</div>
@@ -61,12 +78,12 @@ const OrderItemComponent = ({ order }: { order: OrderAdmin }) => {
               {item.quantity}
             </div>
             <div>
-              <span className="font-medium text-gray-600">Price:</span> $
-              {item.price.toFixed(2)}
+              <span className="font-medium text-gray-600">Price:</span>
+              {formatMoney(item.price)}
             </div>
             <div>
-              <span className="font-medium text-gray-600">Subtotal:</span> $
-              {(item.price * item.quantity).toFixed(2)}
+              <span className="font-medium text-gray-600">Subtotal:</span>
+              {formatMoney(item.price * item.quantity)}
             </div>
           </li>
         ))}
