@@ -1,10 +1,13 @@
-import canUsePromoCode from "@/services/api/order/canUsePromoCode";
 import { API_BASE_URL } from "./environment";
-import { get } from "http";
-import getFeatured from "@/services/api/product/get-featured";
-import { getDestination } from "@/services/api/product/get-destination";
 
 export const API_URLS = {
+  stats: {
+    getViewCount: `${API_BASE_URL}/siteInfo/{siteName}`, // GET
+    increaseCount: `${API_BASE_URL}/siteInfo/{siteName}/`, // POST
+  },
+  home: {
+    trackOrder: `${API_BASE_URL}/shipping/track`, // POST with query params trackingId and phoneNumber
+  },
   product: {
     getProductList: `${API_BASE_URL}/products`,
 

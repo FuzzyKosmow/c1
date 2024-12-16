@@ -4,7 +4,11 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     //Cloudinary
-    domains: ["res.cloudinary.com"],
+    domains: [
+      "res.cloudinary.com",
+      "cdn11.bigcommerce.com",
+      "thumbs.dreamstime.com",
+    ],
   },
 };
 
