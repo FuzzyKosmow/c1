@@ -91,46 +91,72 @@ export default function Orders() {
   };
 
   const handlePrint = (order: OrderAdmin) => {
+    const formatStatus = (status: string) => {
+      const statusColors: Record<string, string> = {
+        pending: "text-yellow-500",
+        shipping: "text-green-500",
+        delivered: "text-blue-500",
+      };
+      return statusColors[status.toLowerCase()] || "text-red-500";
+    };
+
     const printContent = `
-    <div style="font-family: Arial, sans-serif; padding: 16px; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 8px;">
-      <h2 style="text-align: center; color: #333; margin-bottom: 24px;">Order Details</h2>
-      <p style="font-size: 16px; margin: 8px 0;">
-        <strong>Order ID:</strong> <span style="color: #555;">${order.id}</span>
-      </p>
-      <p style="font-size: 16px; margin: 8px 0;">
-        <strong>Customer Name:</strong> <span style="color: #555;">${
-          order.customerName || "NA"
-        }</span>
-      </p>
-      <p style="font-size: 16px; margin: 8px 0;">
-        <strong>Phone Number:</strong> <span style="color: #555;">${
-          order.phoneNumber
-        }</span>
-      </p>
-      <p style="font-size: 16px; margin: 8px 0;">
-        <strong>Tracking ID:</strong> <span style="color: #555;">${
-          order.trackingID || "NA"
-        }</span>
-      </p>
-      <p style="font-size: 16px; margin: 8px 0;">
-        <strong>Total:</strong> <span style="color: #555;">$${(
-          order.total / 100
-        ).toFixed(2)}</span>
-      </p>
-      <p style="font-size: 16px; margin: 8px 0;">
-        <strong>Payment Method:</strong> <span style="color: #555;">${
-          order.paymentMethod
-        }</span>
-      </p>
-      <p style="font-size: 16px; margin: 8px 0; font-weight: bold; color: ${
-        order.status.toLowerCase() === "delivered"
-          ? "#28a745"
-          : order.status.toLowerCase() === "cancelled"
-          ? "#dc3545"
-          : "#ffc107"
-      };">
-        Status: ${formatStatus(order.status)}
-      </p>
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; background-color: #fff; padding: 20px; border-radius: 8px; border: 1px solid #ddd;">
+      <h2 style="text-align: center; color: #333; margin-bottom: 24px; font-size: 24px; font-weight: bold;">Order Details</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; color: #555;">
+        <div style="font-weight: bold; color: #666;">Order ID:</div>
+        <div>${order.id}</div>
+
+        <div style="font-weight: bold; color: #666;">Status:</div>
+        <div style="${formatStatus(order.status)}">${order.status}</div>
+
+        <div style="font-weight: bold; color: #666;">Order Date:</div>
+        <div>${order.orderDate}</div>
+
+        <div style="font-weight: bold; color: #666;">Total:</div>
+        <div>$${order.total.toFixed(2)}</div>
+
+        <div style="font-weight: bold; color: #666;">Payment Method:</div>
+        <div>${order.paymentMethod}</div>
+
+        <div style="font-weight: bold; color: #666;">Shipping Method:</div>
+        <div>${order.shippingMethod}</div>
+
+        <div style="font-weight: bold; color: #666;">Shipping Fee:</div>
+        <div>$${order.shippingFee.toFixed(2)}</div>
+
+        <div style="font-weight: bold; color: #666;">Address:</div>
+        <div>${order.address}</div>
+
+        <div style="font-weight: bold; color: #666;">Phone Number:</div>
+        <div>${order.phoneNumber}</div>
+      </div>
+
+      <hr style="margin: 24px 0; border: none; border-top: 1px solid #ddd;" />
+
+      <h3 style="font-size: 20px; font-weight: bold; color: #333; margin-bottom: 16px;">Items:</h3>
+      <ul style="list-style: none; padding: 0; margin: 0;">
+        ${order.orderDetails
+          .map(
+            (item) => `
+          <li style="padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 6px; background-color: #f9f9f9;">
+            <div><strong style="color: #666;">Name:</strong> ${
+              item.product.name
+            }</div>
+            <div><strong style="color: #666;">Quantity:</strong> ${
+              item.quantity
+            }</div>
+            <div><strong style="color: #666;">Price:</strong> $${item.price.toFixed(
+              2
+            )}</div>
+            <div><strong style="color: #666;">Subtotal:</strong> $${(
+              item.price * item.quantity
+            ).toFixed(2)}</div>
+          </li>
+        `
+          )
+          .join("")}
+      </ul>
     </div>
   `;
 
@@ -139,8 +165,11 @@ export default function Orders() {
     <html>
       <head>
         <title>Print Order</title>
+        <style>
+          body { background-color: #f8f9fa; padding: 20px; font-family: Arial, sans-serif; }
+        </style>
       </head>
-      <body style="background-color: #f8f9fa; padding: 20px;">
+      <body>
         ${printContent}
       </body>
     </html>
