@@ -19,6 +19,8 @@ export default function ProductFormModal({
   const [discountPrice, setDiscountPrice] = useState(
     product?.discountPrice || ""
   );
+  const [country, setCountry] = useState(product?.country || "");
+  const [relatedCity, setRelatedCity] = useState(product?.relatedCity || "");
   const [rating, setRating] = useState(product?.rating || 0);
   const [availability, setAvailability] = useState(
     product?.availability || false
@@ -99,7 +101,7 @@ export default function ProductFormModal({
       setNewCategoryName("");
       setNewCategoryImage("");
       setNewCategoryDescription("");
-      } catch (error) {
+    } catch (error) {
       console.error("Failed to add category", error);
     }
   };
@@ -148,6 +150,8 @@ export default function ProductFormModal({
       price: price,
       discountPrice: discountPrice || null,
       rating: rating,
+      country,
+      relatedCity,
       availability,
       importPrice: importPrice,
       images,
@@ -246,6 +250,30 @@ export default function ProductFormModal({
                 step="0.1"
                 value={rating}
                 onChange={(e) => setRating(parseFloat(e.target.value))}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            {/* Country */}
+            <div className="mb-6">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                Country
+              </label>
+              <input
+                type="text"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            {/* Related City */}
+            <div className="mb-6">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                Related City
+              </label>
+              <input
+                type="text"
+                value={relatedCity}
+                onChange={(e) => setRelatedCity(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>

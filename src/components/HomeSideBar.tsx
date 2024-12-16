@@ -37,7 +37,11 @@ const HomeSideBar = () => {
   };
 
   const handleCategoryClick = (category: string) => {
-    console.log("big cat", category);
+    // If view all clicked, redirect to product list page
+    if (category === "View All") {
+      router.replace("souvenir");
+      return;
+    }
     router.replace("souvenir?category=" + category);
   };
 
@@ -101,7 +105,10 @@ const HomeSideBar = () => {
           <div className="text-gray-500">No categories available</div>
         )}
 
-        <div className="text-orange-500 mt-2 cursor-pointer hover:underline">
+        <div
+          className="text-orange-500 mt-2 cursor-pointer hover:underline"
+          onClick={() => handleCategoryClick("View All")}
+        >
           View All
         </div>
       </div>

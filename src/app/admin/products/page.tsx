@@ -93,6 +93,7 @@ export default function Products() {
             <th className="px-4 py-2 border">Price</th>
             <th className="px-4 py-2 border"> Discounted ?</th>
             <th className="px-4 py-2 border">Categories</th>
+            <th className="px-4 py-2 border">Country</th>
             <th className="px-4 py-2 border">Available</th>
             <th className="px-4 py-2 border">Actions</th>
           </tr>
@@ -110,6 +111,7 @@ export default function Products() {
               <td className="border px-4 py-2">
                 {product.categories.map((category) => category.name).join(", ")}
               </td>
+              <td className="border px-4 py-2">{product.country}</td>
               {/* Todo: Change after inven tracking implementation */}
               <td className="border px-4 py-2">50</td>
               <td className="border px-4 py-2">

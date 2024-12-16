@@ -25,7 +25,8 @@ declare interface IAdminProduct {
   discountPrice: number;
   rating: number;
   availability: boolean;
-  colors: string[];
+  country: string;
+  relatedCity: string;
   categories: ICategoryDTO[];
   stock: number;
   importPrice: number;
@@ -42,6 +43,8 @@ declare interface UpsertProductDTO {
   price: number;
   discountPrice: number;
   rating: number;
+  country: string;
+  relatedCity: string;
   availability: boolean;
   importPrice: number;
   images: string[];
