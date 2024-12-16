@@ -13,7 +13,7 @@ export default async function Page({
   const country = (await searchParams)?.country;
   const relatedCity = (await searchParams)?.relatedCity;
   const sortType = (await searchParams)?.sort;
-
+  const search = (await searchParams)?.search;
   console.log("category", category);
   console.log("country", country);
   console.log("city", relatedCity);
@@ -23,6 +23,7 @@ export default async function Page({
     country: country,
     relatedCity: relatedCity,
     sort: sortType,
+    keyword: search,
   });
 
   const productList = productResponse.products as IProduct[];

@@ -45,7 +45,7 @@ const ContactNav = () => {
 
       {/* Account/Login */}
       <a
-        href={accountName === "Login" ? "/sign-in " : "/account"}
+        href={accountName === "Login" ? "/sign-in " : "/home/profile"}
         className="flex items-center gap-2 hover:text-white transition duration-300"
       >
         <FiUser className="text-xl" />

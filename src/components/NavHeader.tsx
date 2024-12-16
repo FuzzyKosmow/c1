@@ -10,12 +10,16 @@ import IconButton from "./IconButton";
 import NavList from "./NavList";
 import { useState } from "react";
 import CartModal from "./CartModal";
-
+import { useRouter } from "next/navigation";
 export default function NavHeader() {
   const [isCartOpen, setCartOpen] = useState<boolean>(false);
-
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const router = useRouter();
   const toggleCart = () => setCartOpen(!isCartOpen);
-
+  const handleSearch = (string: string) => {
+    setSearchQuery(string);
+    router.push(`/souvenir?search=${string}`);
+  };
   return (
     <div className="bg-gradient-to-b from-orange-500 to-yellow-400">
       <div className="px-24 py-4 flex justify-between items-center">
@@ -30,6 +34,8 @@ export default function NavHeader() {
             <input
               className="flex-1 text-black-700 outline-none text-lg bg-transparent placeholder-gray-500"
               type="text"
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
               placeholder="Search souvenirs..."
             />
             <Image src={SEARCH_ICON} width={24} height={24} alt="search" />
