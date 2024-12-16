@@ -33,31 +33,17 @@ export default async function Page({
         <Text className=" mr-16 font-semibold">Sort by: </Text>
         <CheckBoxGroup selected={sortType} className=" flex gap-5">
           <Link
-            href={`/home/product-list?sort=${encodeURIComponent(
-              "price-low-to-high"
-            )}`}
+            href={`/souvenir?sort=${encodeURIComponent("price-low-to-high")}`}
           >
             <CheckBox title="Price: Low to High" name="price-low-to-high" />
           </Link>
           <Link
-            href={`/home/product-list?sort=${encodeURIComponent(
-              "price-high-to-low"
-            )}`}
+            href={`/souvenir?sort=${encodeURIComponent("price-high-to-low")}`}
           >
             <CheckBox title="Price: High to Low" name="price-high-to-low" />
           </Link>
-          <Link
-            href={`/home/product-list?sort=${encodeURIComponent(
-              "most-popular"
-            )}`}
-          >
-            <CheckBox title="Most popular" name="most-popular" />
-          </Link>
-          <Link
-            href={`/home/product-list?sort=${encodeURIComponent(
-              "newest-arrival"
-            )}`}
-          >
+
+          <Link href={`/souvenir?sort=${encodeURIComponent("newest-arrival")}`}>
             <CheckBox title="Newest arrival" name="newest-arrival" />
           </Link>
         </CheckBoxGroup>
