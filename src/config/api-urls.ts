@@ -25,6 +25,11 @@ export const API_URLS = {
     signin: `${API_BASE_URL}/auth/login`,
     // Get info about the user with the token. Used to get roles
     me: `${API_BASE_URL}/auth/me`,
+    fetchNoti: `${API_BASE_URL}/notification/{userId}`, // GET
+    readNoti: `${API_BASE_URL}/notification/`, // PATCH + id
+    readAllNoti: `${API_BASE_URL}/notification/all/{userId}`, // PATCH
+
+    getOrder: `${API_BASE_URL}/order/`, // GET
   },
   admin: {
     addProduct: `${API_BASE_URL}/products/`, // POST

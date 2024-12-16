@@ -19,7 +19,7 @@ export const Footer = () => {
           <h4 className="text-xl font-bold mb-4">Customer Service</h4>
           <ul className="space-y-2">
             <li>
-              <a href="/track-orders" className="hover:underline">
+              <a href="track-orders" className="hover:underline">
                 Track Your Order
               </a>
             </li>

@@ -7,10 +7,7 @@ export const NAV_HEADERS = [
     title: "Souvenirs",
     path: "/souvenir",
   },
-  {
-    title: "Promotions",
-    path: "/promotions",
-  },
+
   {
     title: "Track Orders",
     path: "/track-orders",
