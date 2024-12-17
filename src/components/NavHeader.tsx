@@ -11,6 +11,7 @@ import NavList from "./NavList";
 import { useState } from "react";
 import CartModal from "./CartModal";
 import { useRouter } from "next/navigation";
+import NotificationDropdown from "./NotificationDropDown";
 export default function NavHeader() {
   const [isCartOpen, setCartOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -42,7 +43,7 @@ export default function NavHeader() {
           </div>
           <div className="flex gap-5 items-center">
             <IconButton icon={CART_ICON} alt="cart" onClick={toggleCart} />
-            <IconButton icon={NOTIFICATION_ICON} alt="notifications" />
+            <NotificationDropdown />
           </div>
         </div>
       </div>
