@@ -26,6 +26,10 @@ export async function getProductListAPI(
       ([key, value]) => value !== undefined && value !== null
     )
   );
+  // Lower case category
+  if (filteredOptions.category) {
+    filteredOptions.category = filteredOptions.category.toLowerCase();
+  }
 
   console.log("Filtered request parameters:", filteredOptions);
   console.log(
